@@ -1,0 +1,34 @@
+{
+  "label": "Russian",
+  "uniqueId": "ru",
+  "localization": {
+    "messages.start": "Выберите на клавиатуре место для записи",
+
+    "messages.searching": "☄️Ищем аккаунт...",
+    "messages.successful": "🕰Обработано за ",
+    "messages.no_connection": "🧧Произошла ошибка подключения, пробуем заного!",
+
+    "messages.user.stats.title": "✍Общая статистика аккаунта ",
+    "messages.user.stats.desc": "📃Описание: ",
+    "messages.user.stats.id": "🆔ID: ",
+    "messages.user.stats.subscribers": "👩‍❤‍👩Подписчики: ",
+    "messages.user.stats.following": "👩‍❤‍👩Подписки: ",
+    "messages.user.stats.friends": "🎭Друзей: ",
+    "messages.user.stats.viewers": "👀 Просмотров: ",
+    "messages.user.stats.likes": "❤Лайков: ",
+    "messages.user.stats.comments": "💬Комментариев: ",
+    "messages.user.stats.shares": "🔁Репостов: ",
+    "messages.user.stats.saves": "📝Сохранений: ",
+    "messages.user.stats.region": "🌎Регион: ",
+    "messages.user.stats.language": "🤐Язык: ",
+    "messages.user.stats.warns": "⚠Нарушений: ",
+    "messages.user.stats.private": "🚪Закрытый аккаунт: ",
+    "messages.user.stats.date_registration": "📆Дата регистрации: ",
+    "messages.user.stats.date_nick_change": "📆Дата смена ника: ",
+    "messages.user.stats.business": "👨🏻‍💼Бизнес аккаунт: ",
+    "messages.user.stats.links": "🔗Ссылки: ",
+
+    "messages.yes": "Да",
+    "messages.no": "Нет"
+  }
+}

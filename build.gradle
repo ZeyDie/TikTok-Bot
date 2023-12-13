@@ -1,0 +1,82 @@
+plugins {
+    id 'java'
+}
+
+sourceCompatibility = "17.PREVIEW"
+targetCompatibility = "17.PREVIEW"
+
+compileJava.options.encoding = 'UTF-8'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs += "--enable-preview"
+}
+
+tasks.withType(Test).configureEach {
+    jvmArgs += "--enable-preview"
+}
+
+tasks.withType(JavaExec).configureEach {
+    jvmArgs += "--enable-preview"
+}
+
+group 'com.zeydie'
+version '0.1A'
+
+repositories {
+    mavenCentral()
+
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(include: ['*.jar'], dir: 'libs/libraries')
+
+    // https://mvnrepository.com/artifact/org.jsoup/jsoup
+    implementation group: 'org.jsoup', name: 'jsoup', version: '1.17.1'
+
+    // https://mvnrepository.com/artifact/org.atteo.classindex/classindex
+    implementation group: 'org.atteo.classindex', name: 'classindex', version: '3.13'
+    annotationProcessor group: 'org.atteo.classindex', name: 'classindex', version: '3.13'
+
+    // https://mvnrepository.com/artifact/org.projectlombok/lombok
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.30'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.30'
+
+    // https://mvnrepository.com/artifact/org.openjdk.jmh/jmh-core
+    testImplementation group: 'org.openjdk.jmh', name: 'jmh-core', version: '1.37'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
+}
+
+jar {
+    def librariesFolder = "libraries"
+
+    configurations.runtimeClasspath.collect {
+        def path = it.getAbsolutePath();
+
+        copy {
+            from path
+            into "$buildDir/libs/$librariesFolder"
+        }
+    }
+
+    manifest {
+        attributes(
+                "Class-Path": configurations.runtimeClasspath.collect { "$librariesFolder/" + it.getName() }.join(' '),
+                "Main-Class": "com.zeydie.telegram.bot.tiktok.BotApplication"
+        )
+    }
+}
+
+test {
+    useJUnitPlatform()
+    jvmArgs(['--enable-preview'])
+}
