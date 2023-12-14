@@ -1,12 +1,18 @@
 import com.zeydie.telegram.bot.tiktok.api.TikTokAPI;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class JsonParserTest {
-    private final String nickname = "@olga_mylife2";
+    private final String nickname = "@tiktok";
 
     @Test
     public void user() {
-        Assertions.assertNotNull(TikTokAPI.getTikTokUserData(this.nickname));
+        @Nullable var userData = TikTokAPI.getTikTokUserData(this.nickname);
+
+        System.out.println(userData);
+
+        Assertions.assertNotNull(userData.getUser());
     }
 }

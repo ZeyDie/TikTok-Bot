@@ -1,7 +1,8 @@
 package com.zeydie.telegram.bot.tiktok;
 
-import com.zeydie.telegram.bot.tiktok.managers.JsonParser;
-import com.zeydie.telegram.bot.tiktok.managers.TikTokParser;
+import com.zeydie.telegram.bot.tiktok.parsers.JsonParser;
+import com.zeydie.telegram.bot.tiktok.parsers.tiktok.TikTokDataParser;
+import com.zeydie.telegram.bot.tiktok.parsers.tiktok.TikTokParser;
 import com.zeydie.telegrambot.TelegramBotCore;
 import com.zeydie.telegrambot.api.modules.interfaces.ISubcore;
 import lombok.Getter;
@@ -18,9 +19,11 @@ public final class BotApplication implements ISubcore {
     private static final @NotNull TelegramBotCore telegramBotCore = TelegramBotCore.getInstance();
 
     @Getter
+    private final @NotNull JsonParser jsonParser = new JsonParser();
+    @Getter
     private final @NotNull TikTokParser tikTokParser = new TikTokParser();
     @Getter
-    private final @NotNull JsonParser jsonParser = new JsonParser();
+    private final @NotNull TikTokDataParser tikTokDataParser = new TikTokDataParser();
 
     @SneakyThrows
     public static void main(@Nullable final String[] args) {

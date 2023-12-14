@@ -1,26 +1,38 @@
 package com.zeydie.telegram.bot.tiktok.configs;
 
-import com.zeydie.telegram.bot.tiktok.BotApplication;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jsoup.Jsoup;
 
+import java.net.Authenticator;
 import java.net.InetSocketAddress;
+import java.net.PasswordAuthentication;
 import java.net.Proxy;
-import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
 public final class ProxyConfig {
-    private boolean enable;
+    private boolean enable = true;
     private List<ProxyData> proxies = new ArrayList<>();
 
     public ProxyConfig() {
         if (this.proxies.isEmpty())
-            this.proxies.add(new ProxyData(Proxy.Type.HTTP, "172.16.0.77", 3128, 10000));
+            this.proxies.add(
+                    new ProxyData(
+                            Proxy.Type.HTTP,
+                            "38.180.114.56",
+                            3128,
+                            true,
+                            "tecmint",
+                            "123456789",
+                            10000
+                    )
+            );
     }
 
     public @Nullable Proxy getProxyAviable() {
@@ -39,27 +51,40 @@ public final class ProxyConfig {
         private Proxy.Type type;
         private String ip;
         private int port;
+        private boolean auth;
+        private String user;
+        private String password;
         private int timeout = 100000;
 
         public @NotNull Proxy getProxy() {
+            if (this.type == Proxy.Type.HTTP) {
+                log.info("Uses proxy {}:{} for {}", this.ip, this.port, this.user);
+
+                System.setProperty("jdk.http.auth.tunneling.disabledSchemes", "");
+                System.setProperty("http.proxyHost", this.ip);
+                System.setProperty("http.proxyPort", String.valueOf(this.port));
+                System.setProperty("https.proxyHost", this.ip);
+                System.setProperty("https.proxyPort", String.valueOf(this.port));
+            }
+
+            if (this.auth) {
+                if (this.type == Proxy.Type.HTTP)
+                    Authenticator.setDefault(
+                            new Authenticator() {
+                                @Override
+                                public PasswordAuthentication getPasswordAuthentication() {
+                                    return new PasswordAuthentication(user, password.toCharArray());
+                                }
+                            }
+                    );
+            }
+
             return new Proxy(this.type, new InetSocketAddress(this.ip, this.port));
         }
 
         @SneakyThrows
         public boolean isAviable() {
-            try {
-                @NonNull val document = Jsoup.connect("https://www.tiktok.com/@tiktok")
-                        .proxy(this.getProxy())
-                        .userAgent("Chrome/4.0.249.0 Safari/532.5")
-                        .timeout(this.timeout)
-                        .get();
-
-                return BotApplication.getInstance().getTikTokParser().getTikTokSigiJson(document) != null;
-            } catch (final SocketTimeoutException exception) {
-                log.error("No aviable {} {}:{}", this.type, this.ip, this.port);
-
-                return false;
-            }
+            return true;
         }
     }
 }

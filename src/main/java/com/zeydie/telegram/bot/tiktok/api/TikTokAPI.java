@@ -1,12 +1,12 @@
 package com.zeydie.telegram.bot.tiktok.api;
 
 import com.zeydie.telegram.bot.tiktok.BotApplication;
-import com.zeydie.telegram.bot.tiktok.data.TikTokPostData;
-import com.zeydie.telegram.bot.tiktok.data.TikTokUserData;
-import com.zeydie.telegram.bot.tiktok.managers.JsonParser;
-import com.zeydie.telegram.bot.tiktok.managers.TikTokParser;
+import com.zeydie.telegram.bot.tiktok.data.v2.TikTokUserDataV2;
+import com.zeydie.telegram.bot.tiktok.parsers.JsonParser;
+import com.zeydie.telegram.bot.tiktok.parsers.tiktok.TikTokParser;
 import lombok.NonNull;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jsoup.nodes.Document;
 
 public final class TikTokAPI {
@@ -25,11 +25,11 @@ public final class TikTokAPI {
         return tikTokParser.getDocumentURL(url);
     }
 
-    public static @NotNull TikTokUserData getTikTokUserData(@NonNull final String nickname) {
+    public static @Nullable TikTokUserDataV2 getTikTokUserData(@NonNull final String nickname) {
         return getTikTokUserData(getDocumentUser(nickname));
     }
 
-    public static @NotNull TikTokUserData getTikTokUserData(@NonNull final Document document) {
+    public static @Nullable TikTokUserDataV2 getTikTokUserData(@NonNull final Document document) {
         return jsonParser.getUserData(tikTokParser.getTikTokSigiJson(document));
     }
 

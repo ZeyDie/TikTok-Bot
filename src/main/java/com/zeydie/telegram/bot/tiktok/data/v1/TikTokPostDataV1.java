@@ -1,4 +1,4 @@
-package com.zeydie.telegram.bot.tiktok.data;
+package com.zeydie.telegram.bot.tiktok.data.v1;
 
 import lombok.Data;
 
@@ -6,7 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Data
-public class TikTokPostData {
+@Deprecated
+public class TikTokPostDataV1 {
     private ItemListData ItemList;
     private Map<String, ItemData> ItemModule = new HashMap<>();
     private UserModuleData UserModule;

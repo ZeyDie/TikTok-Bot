@@ -1,4 +1,4 @@
-package com.zeydie.telegram.bot.tiktok.data;
+package com.zeydie.telegram.bot.tiktok.data.v1;
 
 import lombok.Data;
 
@@ -6,10 +6,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Data
-public class TikTokUserData {
+@Deprecated
+public class TikTokUserDataV1 {
     private ItemListData ItemList;
-    private Map<String, TikTokPostData.ItemData> ItemModule = new HashMap<>();
-    private TikTokPostData.UserModuleData UserModule;
+    private Map<String, TikTokPostDataV1.ItemData> ItemModule = new HashMap<>();
+    private TikTokPostDataV1.UserModuleData UserModule;
     private UserPageData UserPage;
     private RecommendUserData RecommendUserList;
     private AccountListData AccountList;
@@ -29,7 +30,7 @@ public class TikTokUserData {
             private int statusCode;
             private boolean hasMore;
             private String cursor;
-            private TikTokPostData.ItemListData.VideoData.Preload[] preloadList;
+            private TikTokPostDataV1.ItemListData.VideoData.Preload[] preloadList;
         }
     }
 
@@ -76,7 +77,7 @@ public class TikTokUserData {
         private String id;
         private String name;
         private int videoCount;
-        private TikTokPostData.UserModuleData.UserData creator;
+        private TikTokPostDataV1.UserModuleData.UserData creator;
         private String cover;
     }
 }
