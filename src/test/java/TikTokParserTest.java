@@ -39,40 +39,55 @@ public class TikTokParserTest {
     public void followers() {
         @NotNull var tiktokParser = BotApplication.getInstance().getTikTokParser();
         @NotNull var document = tiktokParser.getDocumentURL(tiktokParser.getUserURL(this.nickname));
+        @NotNull var followers = tiktokParser.getFollowers(document);
 
-        Assertions.assertNotNull(tiktokParser.getFollowers(document));
+        System.out.println("Followers: " + followers);
+
+        Assertions.assertNotNull(followers);
     }
 
     @Test
     public void likes() {
         @NotNull var tiktokParser = BotApplication.getInstance().getTikTokParser();
         @NotNull var document = tiktokParser.getDocumentURL(tiktokParser.getUserURL(this.nickname));
+        @NotNull var likes = tiktokParser.getLikes(document);
 
-        Assertions.assertNotNull(tiktokParser.getLikes(document));
+        System.out.println("Likes: " + likes);
+
+        Assertions.assertNotNull(likes);
     }
 
     @Test
     public void bio() {
         @NotNull var tiktokParser = BotApplication.getInstance().getTikTokParser();
         @NotNull var document = tiktokParser.getDocumentURL(tiktokParser.getUserURL(this.nickname));
+        @NotNull var bio = tiktokParser.getUserBio(document);
 
-        Assertions.assertNotNull(tiktokParser.getUserBio(document));
+        System.out.println("Bio: " + bio);
+
+        Assertions.assertNotNull(bio);
     }
 
     @Test
     public void title() {
         @NotNull var tiktokParser = BotApplication.getInstance().getTikTokParser();
         @NotNull var document = tiktokParser.getDocumentURL(tiktokParser.getUserURL(this.nickname));
+        @NotNull var title = tiktokParser.getUserTitle(document);
 
-        Assertions.assertNotNull(tiktokParser.getUserTitle(document));
+        System.out.println("Title: " + title);
+
+        Assertions.assertNotNull(title);
     }
 
     @Test
     public void link() {
         @NotNull var tiktokParser = BotApplication.getInstance().getTikTokParser();
         @NotNull var document = tiktokParser.getDocumentURL(tiktokParser.getUserURL(this.nickname));
+        @NotNull var link = tiktokParser.getUserLink(document);
 
-        Assertions.assertNotNull(tiktokParser.getUserLink(document));
+        System.out.println("Link: " + link);
+
+        Assertions.assertNotNull(link);
     }
 
     @Test
