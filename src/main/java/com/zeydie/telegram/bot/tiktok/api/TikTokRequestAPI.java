@@ -47,7 +47,7 @@ curl --location --request POST 'https://open.tiktokapis.com/v2/oauth/token/' \
     }
 
     public static @NonNull UserData getUserData() {
-
+        return null;
     }
 
     public static @NonNull Response execute(@NonNull final Request request) throws IOException {

@@ -1,4 +1,3 @@
-import com.microsoft.playwright.*;
 import com.zeydie.telegram.bot.tiktok.BotApplication;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
