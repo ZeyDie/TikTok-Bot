@@ -45,6 +45,9 @@ dependencies {
     // https://mvnrepository.com/artifact/com.microsoft.playwright/playwright
     implementation group: 'com.microsoft.playwright', name: 'playwright', version: '1.40.0'
 
+    // https://mvnrepository.com/artifact/net.sourceforge.htmlunit/htmlunit
+    implementation group: 'net.sourceforge.htmlunit', name: 'htmlunit', version: '2.70.0'
+
     // https://mvnrepository.com/artifact/org.atteo.classindex/classindex
     implementation group: 'org.atteo.classindex', name: 'classindex', version: '3.13'
     annotationProcessor group: 'org.atteo.classindex', name: 'classindex', version: '3.13'
