@@ -2,6 +2,7 @@ package com.zeydie.telegram.bot.tiktok.chat.messages;
 
 import com.zeydie.telegram.bot.tiktok.BotApplication;
 import com.zeydie.telegram.bot.tiktok.api.TikTokAPI;
+import com.zeydie.telegram.bot.tiktok.api.data.TikTokUserData;
 import com.zeydie.telegrambot.TelegramBotCore;
 import com.zeydie.telegrambot.api.telegram.events.MessageEventSubscribe;
 import com.zeydie.telegrambot.api.telegram.events.subscribes.EventSubscribesRegister;
@@ -10,6 +11,7 @@ import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.text.SimpleDateFormat;
@@ -77,8 +79,8 @@ public final class SearchMessage {
         }
         @NonNull val builder = new StringBuilder();
 
-        builder.append(localize.localize("messages.user.stats.title")).append(tiktokDataParser.getUserTitle(tikTokUserData)).append("\n")
-                .append(localize.localize("messages.user.stats.id")).append(tiktokDataParser.getUserId(tikTokUserData)).append("\n")
+        builder.append(localize.localize("messages.user.stats.title")).append(tiktokDataParser.getNickname(tikTokUserData)).append("\n")
+                .append(localize.localize("messages.user.stats.id")).append(tiktokDataParser.getId(tikTokUserData)).append("\n")
                 .append(localize.localize("messages.user.stats.desc")).append(tiktokDataParser.getUserBio(tikTokUserData)).append("\n")
                 .append(localize.localize("messages.user.stats.subscribers")).append(tiktokDataParser.getFollowers(tikTokUserData)).append("\n")
                 .append(localize.localize("messages.user.stats.following")).append(tiktokDataParser.getFollowing(tikTokUserData)).append("\n")
@@ -87,10 +89,10 @@ public final class SearchMessage {
                 .append(localize.localize("messages.user.stats.videos")).append(tiktokDataParser.getVideos(tikTokUserData)).append("\n")
                 .append(localize.localize("messages.user.stats.comments")).append("\n")
                 .append(localize.localize("messages.user.stats.shares")).append("\n")
-                .append(localize.localize("messages.user.stats.region")).append(tiktokDataParser.getRegion(tikTokUserData)).append("\n")
-                .append(localize.localize("messages.user.stats.language")).append(tiktokDataParser.getLanguage(tikTokUserData)).append("\n")
+                .append(localize.localize("messages.user.stats.region")).append(localize.localize(tiktokDataParser.getRegion(tikTokUserData))).append("\n")
+                .append(localize.localize("messages.user.stats.language")).append(localize.localize(tiktokDataParser.getLanguage(tikTokUserData))).append("\n")
                 .append(localize.localize("messages.user.stats.private")).append(tiktokDataParser.isPrivate(tikTokUserData) ? localize.localize("messages.yes") : localize.localize("messages.no")).append("\n")
-                .append(localize.localize("messages.user.stats.business")).append(tiktokDataParser.isCommerce(tikTokUserData) ? localize.localize("messages.yes") : localize.localize("messages.no")).append("\n");
+                .append(this.getCommerceInfo(tikTokUserData)).append("\n");
 
         val createTime = tiktokDataParser.getCreateTime(tikTokUserData);
         val nicknameModifyTime = tiktokDataParser.getNicknameModifyTime(tikTokUserData);
@@ -108,5 +110,22 @@ public final class SearchMessage {
         builder.append("\n").append(localize.localize("messages.successful")).append(formatterExecute.format(new Date(System.currentTimeMillis() - start)));
 
         BotApplication.getTelegramBotCore().sendMessage(userId, builder.toString());
+    }
+
+    @SneakyThrows
+    private @NotNull String getCommerceInfo(@NonNull final TikTokUserData tikTokUserData) {
+        @NonNull val localize = TelegramBotCore.getInstance().getLanguage();
+        @NonNull val tiktokDataParser = BotApplication.getInstance().getTikTokDataParser();
+
+        @NonNull val builder = new StringBuilder();
+
+        builder.append(localize.localize("messages.user.stats.business"));
+
+        if (tiktokDataParser.isCommerce(tikTokUserData)) {
+            builder.append(localize.localize("messages.yes")).append("\n");
+            builder.append(localize.localize("messages.user.stats.business.category")).append(tiktokDataParser.getCommerceCategory(tikTokUserData));
+        } else builder.append(localize.localize("messages.no"));
+
+        return builder.toString();
     }
 }

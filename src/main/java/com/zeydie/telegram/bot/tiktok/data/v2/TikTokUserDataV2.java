@@ -1,82 +1,103 @@
 package com.zeydie.telegram.bot.tiktok.data.v2;
 
+import com.zeydie.telegram.bot.tiktok.api.data.TikTokUserData;
+import com.zeydie.telegram.bot.tiktok.data.v2.user.StatsData;
+import com.zeydie.telegram.bot.tiktok.data.v2.user.UserData;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Data
-public class TikTokUserDataV2 {
+@EqualsAndHashCode(callSuper = false)
+public class TikTokUserDataV2 extends TikTokUserData {
     private UserData user;
     private StatsData stats;
     @Deprecated
     private Object[] itemList;
 
-    @Data
-    public static class UserData {
-        private String id;
-        private String shortId;
-        private String uniqueId;
-        private String nickname;
-        private String avatarLarger;
-        private String avatarMedium;
-        private String avatarThumb;
-        private String signature;
-        private int createTime;
-        private boolean verified;
-        private String secUid;
-        private boolean ftc;
-        private int relation;
-        private boolean openFavorite;
-        private BioLink bioLink;
-        private int commentSetting;
-        private CommerceUserInfo commerceUserInfo;
-        private int duetSetting;
-        private int stitchSetting;
-        private boolean privateAccount;
-        private boolean secret;
-        private boolean isADVirtual;
-        private String roomId;
-        private int uniqueIdModifyTime;
-        private boolean ttSeller;
-        private String region;
-        private ProfileTab profileTab;
-        private int followingVisibility;
-        private String recommendReason;
-        private String nowInvitationCardUrl;
-        private int nickNameModifyTime;
-        private boolean isEmbedBanned;
-        private boolean canExpPlaylist;
-        private int profileEmbedPermission;
-        private String language;
-        @Deprecated
-        private Object[] eventList;
-
-        @Data
-        public static class BioLink {
-            private String link;
-            private int risk;
-        }
-
-        @Data
-        public static class CommerceUserInfo {
-            private boolean commerceUser;
-            private String category;
-        }
-
-        @Data
-        public static class ProfileTab {
-            private boolean showMusicTab;
-            private boolean showQuestionTab;
-            private boolean showPlayListTab;
-        }
+    @Override
+    public @NotNull String getId() {
+        return this.user.getId();
     }
 
-    @Data
-    public static class StatsData {
-        private int followerCount;
-        private int followingCount;
-        private int heart;
-        private int heartCount;
-        private int videoCount;
-        private int diggCount;
-        private int friendCount;
+    @Override
+    public @NotNull String getUniqueId() {
+        return this.user.getUniqueId();
+    }
+
+    @Override
+    public @NotNull String getNickname() {
+        return this.user.getNickname();
+    }
+
+    @Override
+    public @NotNull String getUserBio() {
+        return this.user.getSignature();
+    }
+
+    @Override
+    public @Nullable String getUserLink() {
+        return this.user.getBioLink().getLink();
+    }
+
+    @Override
+    public int getFollowers() {
+        return this.stats.getFollowerCount();
+    }
+
+    @Override
+    public int getFollowing() {
+        return this.stats.getFollowingCount();
+    }
+
+    @Override
+    public int getLikes() {
+        return this.stats.getHeartCount();
+    }
+
+    @Override
+    public int getFriends() {
+        return this.stats.getFriendCount();
+    }
+
+    @Override
+    public int getVideos() {
+        return this.stats.getVideoCount();
+    }
+
+    @Override
+    public @NotNull String getRegion() {
+        return this.user.getRegion();
+    }
+
+    @Override
+    public @NotNull String getLanguage() {
+        return this.user.getLanguage();
+    }
+
+    @Override
+    public boolean isPrivate() {
+        return this.user.isPrivateAccount();
+    }
+
+    @Override
+    public boolean isCommerce() {
+        return this.user.getCommerceUserInfo().isCommerceUser();
+    }
+
+    @Override
+    public @NotNull String getCommerceCategory() {
+        return this.user.getCommerceUserInfo().getCategory();
+    }
+
+    @Override
+    public int getCreateTime() {
+        return this.user.getCreateTime();
+    }
+
+    @Override
+    public int getNicknameModifyTime() {
+        return this.user.getNickNameModifyTime();
     }
 }

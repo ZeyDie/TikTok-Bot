@@ -4,6 +4,7 @@ import com.zeydie.telegram.bot.tiktok.configs.ConfigStore;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.val;
+import org.jetbrains.annotations.NotNull;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -11,35 +12,38 @@ import org.jsoup.select.NodeFilter;
 
 import java.io.IOException;
 import java.net.Proxy;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 
-public final class JSoupAPI {
-    public static String USER_AGENT = "Mozilla\u002F5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\u002F537.36 (KHTML, like Gecko) Chrome\u002F120.0.0.0 Safari\u002F537.36 Edg\u002F120.0.0.0";
+public final class JsoupAPI {
 
     @SneakyThrows
-    public static Document getDocumentURL(@NonNull final String url) {
+    public static @NotNull Document getDocumentURL(@NonNull final String url) {
         @NonNull val proxyConfig = ConfigStore.getProxyConfig();
 
         return getDocumentURLProxy(
                 url,
                 proxyConfig.isEnable() ? proxyConfig.getProxyAviable() : Proxy.NO_PROXY,
-                60000
+                Duration.of(1, ChronoUnit.MINUTES).toMillisPart()
         );
     }
 
-    public static Document getDocumentURLProxy(
+    public static @NotNull Document getDocumentURLProxy(
             @NonNull final String url,
             @NonNull final Proxy proxy,
             final int timeout
     ) throws IOException {
         return Jsoup.connect(url)
-                .userAgent(USER_AGENT)
+                .headers(HTTPApi.getHeaders())
                 .proxy(proxy)
-                .timeout(timeout)
-                .maxBodySize(0)
+                .ignoreHttpErrors(true)
+                .ignoreContentType(true)
+                // .timeout(timeout)
+                // .maxBodySize(0)
                 .get();
     }
 
-    public static @NonNull Elements getElementsByAttributeValue(
+    public static @NotNull Elements getElementsByAttributeValue(
             @NonNull final Document document,
             @NonNull final String attribute,
             @NonNull final String value
