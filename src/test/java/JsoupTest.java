@@ -1,8 +1,12 @@
 import com.zeydie.telegram.bot.tiktok.BotApplication;
 import com.zeydie.telegram.bot.tiktok.api.TikTokAPI;
+import com.zeydie.telegram.bot.tiktok.api.TikTokRequestAPI;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
+import java.util.HashMap;
 
 public class JsoupTest {
     @Test
@@ -33,5 +37,10 @@ public class JsoupTest {
         System.out.println(json);
 
         Assertions.assertNotNull(json);
+    }
+
+    @Test
+    public void userItemList() {
+        System.out.println(TikTokRequestAPI.getUserItemList("MS4wLjABAAAAv7iSuuXDJGDvJkmH_vz1qkDZYo1apxgzaxdBSeIuPiM"));
     }
 }

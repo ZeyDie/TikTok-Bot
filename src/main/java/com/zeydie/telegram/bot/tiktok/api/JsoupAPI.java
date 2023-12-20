@@ -4,7 +4,9 @@ import com.zeydie.telegram.bot.tiktok.configs.ConfigStore;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.val;
+import org.apache.http.protocol.HTTP;
 import org.jetbrains.annotations.NotNull;
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -41,6 +43,21 @@ public final class JsoupAPI {
                 // .timeout(timeout)
                 // .maxBodySize(0)
                 .get();
+    }
+
+    public static @NotNull Connection getConnection(@NonNull final String url) {
+        @NonNull val proxyConfig = ConfigStore.getProxyConfig();
+
+        return getConnection(url, proxyConfig.isEnable() ? proxyConfig.getProxyAviable() : Proxy.NO_PROXY);
+    }
+
+    public static @NotNull Connection getConnection(
+            @NonNull final String url,
+            @NonNull final Proxy proxy
+    ) {
+        return Jsoup.connect(url)
+                .headers(HTTPApi.getHeaders())
+                .proxy(proxy);
     }
 
     public static @NotNull Elements getElementsByAttributeValue(

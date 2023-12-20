@@ -11,7 +11,6 @@ import java.util.Random;
 public final class HTTPApi {
     private static final @NotNull Random random = new Random();
 
-
     public static @NotNull Map<String, String> getHeaders() {
         @NonNull val headers = new HashMap<String, String>();
 
