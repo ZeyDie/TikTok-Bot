@@ -155,6 +155,7 @@ _signature: _02B4Z6wo00001FRh2YgAAIDAVGHZi2RVVERUYd0AAHCi63
         //datas.forEach(connection::data);
 
         return connection
+                .userAgent("5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0")
                 .header("Content-Type", "application/" + contentType.getType())
                 .header("Accept", "application/" + contentTypeAccept.getType())
                 .followRedirects(true)
