@@ -47,6 +47,11 @@ dependencies {
     // https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java
     implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '4.16.1'
 
+    // https://mvnrepository.com/artifact/com.eclipsesource.j2v8/j2v8
+    implementation group: 'com.eclipsesource.j2v8', name: 'j2v8', version: '6.2.1'
+    // https://mvnrepository.com/artifact/com.eclipsesource.j2v8/j2v8_win32_x86_64
+    implementation group: 'com.eclipsesource.j2v8', name: 'j2v8_win32_x86_64', version: '4.6.0'
+
     // https://mvnrepository.com/artifact/org.atteo.classindex/classindex
     implementation group: 'org.atteo.classindex', name: 'classindex', version: '3.13'
     annotationProcessor group: 'org.atteo.classindex', name: 'classindex', version: '3.13'
