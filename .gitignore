@@ -26,7 +26,10 @@ replay_pid*
 .gradle
 out
 build
-charts
+cache
+configs
+node_modules
+permissions
 logs
 *.cfg
 *.pex
