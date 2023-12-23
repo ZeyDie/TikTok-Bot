@@ -2,11 +2,13 @@ package com.zeydie.telegram.bot.tiktok.parsers;
 
 import com.google.gson.JsonObject;
 import com.zeydie.sgson.SGsonBase;
-import com.zeydie.telegram.bot.tiktok.api.data.TikTokPostData;
+import com.zeydie.telegram.bot.tiktok.api.data.TikTokItemListData;
 import com.zeydie.telegram.bot.tiktok.api.data.TikTokUserData;
+import com.zeydie.telegram.bot.tiktok.api.data.TikTokVideoData;
 import com.zeydie.telegram.bot.tiktok.api.parsers.IJsonParser;
-import com.zeydie.telegram.bot.tiktok.data.v2.TikTokPostDataV2;
+import com.zeydie.telegram.bot.tiktok.data.v2.TikTokItemListDataV2;
 import com.zeydie.telegram.bot.tiktok.data.v2.TikTokUserDataV2;
+import com.zeydie.telegram.bot.tiktok.data.v2.TikTokVideoDataV2;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -15,8 +17,8 @@ import org.jetbrains.annotations.Nullable;
 
 public final class JsonParser implements IJsonParser {
     @Override
-    public @Nullable TikTokUserData getUserData(@NotNull final String json) {
-        @NonNull var userDataJson = new GsonParser(json).getUserDataJson();
+    public @Nullable TikTokUserData parseUserData(@NotNull final String json) {
+        @Nullable var userDataJson = new GsonParser(json).getUserDataJson();
 
         if (userDataJson != null)
             return new SGsonBase().fromJsonToObject(userDataJson, new TikTokUserDataV2());
@@ -25,12 +27,29 @@ public final class JsonParser implements IJsonParser {
     }
 
     @Override
-    public @NotNull TikTokPostData getPostData(@NotNull final String json) {
-        return new SGsonBase().fromJsonToObject(json, new TikTokPostDataV2());
+    public @Nullable TikTokItemListData parseItemListData(@NotNull final String json) {
+        @Nullable var itemListDataJson = new GsonParser(json).getItemListDataJson();
+
+        System.out.println(itemListDataJson);
+
+        if (itemListDataJson != null)
+            return new SGsonBase().fromJsonToObject(itemListDataJson, new TikTokItemListDataV2());
+
+        return null;
+    }
+
+    @Override
+    public @Nullable TikTokVideoData parseVideoData(@NotNull String json) {
+        @Nullable var videosDataJson = new GsonParser(json).getVideoDataJson();
+
+        if (videosDataJson != null)
+            return new SGsonBase().fromJsonToObject(videosDataJson, new TikTokVideoDataV2());
+
+        return null;
     }
 
     @RequiredArgsConstructor
-    private class GsonParser {
+    private static class GsonParser {
         private final com.google.gson.JsonParser jsonParser = new com.google.gson.JsonParser();
         private final String json;
 
@@ -43,6 +62,23 @@ public final class JsonParser implements IJsonParser {
 
             if (userDetail.has("userInfo"))
                 return userDetail.get("userInfo").toString();
+
+            return null;
+        }
+
+        public @Nullable String getItemListDataJson() {
+            return this.json;
+        }
+
+        public @Nullable String getVideoDataJson() {
+            @NonNull val sharingVideoModule = this.jsonParser.parse(this.json).getAsJsonObject().get("SharingVideoModule").getAsJsonObject();
+
+            if (sharingVideoModule.has("videoData")) {
+                @NonNull val videoData = sharingVideoModule.get("videoData").getAsJsonObject();
+
+                if (videoData.has("itemInfo"))
+                    return videoData.get("itemInfo").getAsJsonObject().get("itemStruct").toString();
+            }
 
             return null;
         }

@@ -8,6 +8,8 @@ public abstract class TikTokUserData {
 
     public abstract @NotNull String getUniqueId();
 
+    public abstract @NotNull String getSecUid();
+
     public abstract @NotNull String getNickname();
 
     public abstract @NotNull String getUserBio();

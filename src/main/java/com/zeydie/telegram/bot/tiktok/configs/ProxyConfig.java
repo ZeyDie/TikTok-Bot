@@ -1,15 +1,13 @@
 package com.zeydie.telegram.bot.tiktok.configs;
 
-import com.zeydie.telegram.bot.tiktok.api.JsoupAPI;
 import com.zeydie.telegram.bot.tiktok.api.TikTokAPI;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.SneakyThrows;
+import com.zeydie.telegram.bot.tiktok.api.parsers.web.PCWebParser;
+import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jsoup.Jsoup;
 
+import java.io.IOException;
 import java.net.Authenticator;
 import java.net.InetSocketAddress;
 import java.net.PasswordAuthentication;
@@ -22,10 +20,11 @@ import java.util.List;
 @Data
 public final class ProxyConfig {
     private boolean enable = false;
-    private List<ProxyData> proxies = new ArrayList<>();
+    private List<ProxyData> proxies;
 
     public ProxyConfig() {
-        if (this.proxies.isEmpty())
+        if (this.proxies == null) {
+            this.proxies = new ArrayList<>();
             this.proxies.add(
                     new ProxyData(
                             Proxy.Type.HTTP,
@@ -37,11 +36,15 @@ public final class ProxyConfig {
                             10000
                     )
             );
+        }
     }
 
-    public @Nullable Proxy getProxyAviable() {
+    public @NotNull Proxy getProxyAvailable() {
+        if (!this.enable)
+            return Proxy.NO_PROXY;
+
         return this.proxies.stream()
-                .filter(proxyData -> proxyData.isAviable())
+                .filter(ProxyData::isAvailable)
                 .findFirst()
                 .map(ProxyData::getProxy)
                 .orElse(Proxy.NO_PROXY);
@@ -92,13 +95,22 @@ public final class ProxyConfig {
             return new Proxy(this.type, new InetSocketAddress(this.ip, this.port));
         }
 
-        @SneakyThrows
-        public boolean isAviable() {
-            return JsoupAPI.getDocumentURLProxy(
-                    TikTokAPI.tiktokAccountURL,
-                    this.getProxy(),
-                    this.timeout
-            ) != null;
+        public boolean isAvailable() {
+            try {
+                @NonNull val url = TikTokAPI.tiktokUrl + TikTokAPI.tiktokAccount;
+                @NonNull val webParser = new PCWebParser(url);
+
+                Jsoup.connect(url)
+                        .userAgent(webParser.getUserAgent())
+                        .proxy(ConfigStore.getProxyConfig().getProxyAvailable())
+                        .ignoreHttpErrors(true)
+                        .ignoreContentType(true)
+                        .get();
+
+                return true;
+            } catch (IOException exception) {
+                return false;
+            }
         }
     }
 }

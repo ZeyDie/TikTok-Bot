@@ -1,71 +1,39 @@
 package com.zeydie.telegram.bot.tiktok.api;
 
-import com.zeydie.telegram.bot.tiktok.configs.ConfigStore;
+import com.zeydie.telegram.bot.tiktok.api.parsers.web.IWebParser;
+import com.zeydie.telegram.bot.tiktok.api.parsers.web.MobileWebParser;
+import com.zeydie.telegram.bot.tiktok.api.parsers.web.PCWebParser;
 import lombok.NonNull;
-import lombok.SneakyThrows;
 import lombok.val;
-import org.apache.http.protocol.HTTP;
 import org.jetbrains.annotations.NotNull;
-import org.jsoup.Connection;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
-import org.jsoup.select.NodeFilter;
+import org.jetbrains.annotations.Nullable;
+import org.jsoup.nodes.Element;
 
 import java.io.IOException;
-import java.net.Proxy;
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
 
 public final class JsoupAPI {
-
-    @SneakyThrows
-    public static @NotNull Document getDocumentURL(@NonNull final String url) {
-        @NonNull val proxyConfig = ConfigStore.getProxyConfig();
-
-        return getDocumentURLProxy(
-                url,
-                proxyConfig.isEnable() ? proxyConfig.getProxyAviable() : Proxy.NO_PROXY,
-                Duration.of(1, ChronoUnit.MINUTES).toMillisPart()
-        );
+    public static @Nullable Element postPC(@NonNull final String url) throws IOException {
+        return getWebParser(url, false).post().getDocument();
     }
 
-    public static @NotNull Document getDocumentURLProxy(
+    public static @Nullable Element postMobile(@NonNull final String url) throws IOException {
+        return getWebParser(url, true).post().getDocument();
+    }
+
+    public static @Nullable Element getPC(@NonNull final String url) throws IOException {
+        return getWebParser(url, false).get().getDocument();
+    }
+
+    public static @Nullable Element getMobile(@NonNull final String url) throws IOException {
+        return getWebParser(url, true).get().getDocument();
+    }
+
+    public static @NotNull IWebParser getWebParser(
             @NonNull final String url,
-            @NonNull final Proxy proxy,
-            final int timeout
-    ) throws IOException {
-        return Jsoup.connect(url)
-                .headers(HTTPApi.getHeaders())
-                .proxy(proxy)
-                .ignoreHttpErrors(true)
-                .ignoreContentType(true)
-                // .timeout(timeout)
-                // .maxBodySize(0)
-                .get();
-    }
-
-    public static @NotNull Connection getConnection(@NonNull final String url) {
-        @NonNull val proxyConfig = ConfigStore.getProxyConfig();
-
-        return getConnection(url, proxyConfig.isEnable() ? proxyConfig.getProxyAviable() : Proxy.NO_PROXY);
-    }
-
-    public static @NotNull Connection getConnection(
-            @NonNull final String url,
-            @NonNull final Proxy proxy
+            final boolean mobile
     ) {
-        return Jsoup.connect(url)
-                .headers(HTTPApi.getHeaders())
-                .proxy(proxy);
-    }
+        @NonNull val webParser = mobile ? new MobileWebParser(url) : new PCWebParser(url);
 
-    public static @NotNull Elements getElementsByAttributeValue(
-            @NonNull final Document document,
-            @NonNull final String attribute,
-            @NonNull final String value
-    ) {
-        return document.getElementsByAttributeValue(attribute, value)
-                .filter((node, depth) -> node != null ? NodeFilter.FilterResult.CONTINUE : NodeFilter.FilterResult.REMOVE);
+        return webParser.connection();
     }
 }

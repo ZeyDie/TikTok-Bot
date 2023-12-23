@@ -12,4 +12,8 @@ public final class ConfigStore {
     @Getter
     @ConfigSubscribe(name = "proxy")
     public static @NotNull ProxyConfig proxyConfig = new ProxyConfig();
+    @NonFinal
+    @Getter
+    @ConfigSubscribe(name = "request")
+    public static @NotNull RequestConfig requestConfig = new RequestConfig();
 }

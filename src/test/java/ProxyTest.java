@@ -6,12 +6,12 @@ import java.nio.file.Paths;
 
 public class ProxyTest {
     @Test
-    public void aviable() {
+    public void available() {
         new SGsonFile(Paths.get("configs").resolve("proxy.cfg"))
                 .fromJsonToObject(new ProxyConfig())
                 .getProxies()
                 .forEach(
-                        proxyData -> System.out.printf("Check proxy %s:%d %b%n", proxyData.getIp(), proxyData.getPort(), proxyData.isAviable())
+                        proxyData -> System.out.printf("Check proxy %s:%d %b%n", proxyData.getIp(), proxyData.getPort(), proxyData.isAvailable())
                 );
     }
 }

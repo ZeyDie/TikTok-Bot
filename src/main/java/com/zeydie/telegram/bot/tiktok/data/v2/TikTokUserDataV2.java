@@ -1,18 +1,19 @@
 package com.zeydie.telegram.bot.tiktok.data.v2;
 
 import com.zeydie.telegram.bot.tiktok.api.data.TikTokUserData;
-import com.zeydie.telegram.bot.tiktok.data.v2.user.StatsData;
 import com.zeydie.telegram.bot.tiktok.data.v2.user.UserData;
+import com.zeydie.telegram.bot.tiktok.data.v2.user.UserStatsData;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+//TODO Nullables values
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class TikTokUserDataV2 extends TikTokUserData {
     private UserData user;
-    private StatsData stats;
+    private UserStatsData stats;
     @Deprecated
     private Object[] itemList;
 
@@ -24,6 +25,11 @@ public class TikTokUserDataV2 extends TikTokUserData {
     @Override
     public @NotNull String getUniqueId() {
         return this.user.getUniqueId();
+    }
+
+    @Override
+    public @NotNull String getSecUid() {
+        return this.user.getSecUid();
     }
 
     @Override

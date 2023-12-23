@@ -1,21 +1,20 @@
 package com.zeydie.telegram.bot.tiktok.data.v2.user;
 
 import lombok.Data;
-import org.jetbrains.annotations.Nullable;
 
 @Data
 public class UserData {
-    private @Nullable String id;
-    private @Nullable String shortId;
-    private @Nullable String uniqueId;
-    private @Nullable String nickname;
-    private @Nullable String avatarLarger;
-    private @Nullable String avatarMedium;
-    private @Nullable String avatarThumb;
-    private @Nullable String signature;
+    private String id;
+    private String shortId;
+    private String uniqueId;
+    private String nickname;
+    private String avatarLarger;
+    private String avatarMedium;
+    private String avatarThumb;
+    private String signature;
     private int createTime;
     private boolean verified;
-    private @Nullable String secUid;
+    private String secUid;
     private boolean ftc;
     private int relation;
     private boolean openFavorite;
@@ -27,19 +26,19 @@ public class UserData {
     private boolean privateAccount;
     private boolean secret;
     private boolean isADVirtual;
-    private @Nullable String roomId;
+    private String roomId;
     private int uniqueIdModifyTime;
     private boolean ttSeller;
-    private @Nullable String region;
+    private String region;
     private ProfileTab profileTab = new ProfileTab();
     private int followingVisibility;
-    private @Nullable String recommendReason;
-    private @Nullable String nowInvitationCardUrl;
+    private String recommendReason;
+    private String nowInvitationCardUrl;
     private int nickNameModifyTime;
     private boolean isEmbedBanned;
     private boolean canExpPlaylist;
     private int profileEmbedPermission;
-    private @Nullable String language;
+    private String language;
     @Deprecated
     private Object[] eventList;
 }
