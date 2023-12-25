@@ -5,14 +5,16 @@ import com.zeydie.telegram.bot.tiktok.data.v2.itemlist.video.VideoData;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class TikTokItemListDataV2 extends TikTokItemListData {
-    private VideoData[] itemList;
+    private @Nullable VideoData[] itemList;
 
     @Override
     public int getCollectCounts() {
@@ -51,6 +53,6 @@ public class TikTokItemListDataV2 extends TikTokItemListData {
 
     @Override
     public @NotNull List<VideoData> getVideosData() {
-        return Arrays.asList(this.itemList);
+        return this.itemList == null ? new ArrayList<>() : Arrays.asList(this.itemList);
     }
 }

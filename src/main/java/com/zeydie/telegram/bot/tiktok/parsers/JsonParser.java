@@ -30,8 +30,6 @@ public final class JsonParser implements IJsonParser {
     public @Nullable TikTokItemListData parseItemListData(@NotNull final String json) {
         @Nullable var itemListDataJson = new GsonParser(json).getItemListDataJson();
 
-        System.out.println(itemListDataJson);
-
         if (itemListDataJson != null)
             return new SGsonBase().fromJsonToObject(itemListDataJson, new TikTokItemListDataV2());
 

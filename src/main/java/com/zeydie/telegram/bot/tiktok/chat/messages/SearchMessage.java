@@ -3,6 +3,7 @@ package com.zeydie.telegram.bot.tiktok.chat.messages;
 import com.zeydie.telegram.bot.tiktok.BotApplication;
 import com.zeydie.telegram.bot.tiktok.api.TikTokAPI;
 import com.zeydie.telegram.bot.tiktok.api.data.TikTokUserData;
+import com.zeydie.telegram.bot.tiktok.api.data.TikTokVideoData;
 import com.zeydie.telegram.bot.tiktok.parsers.tiktok.TikTokItemListWebParser;
 import com.zeydie.telegram.bot.tiktok.parsers.tiktok.TikTokItemVideoParser;
 import com.zeydie.telegram.bot.tiktok.parsers.tiktok.TikTokUserWebParser;
@@ -20,7 +21,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Log4j2
@@ -75,7 +78,7 @@ public final class SearchMessage {
 
         @Nullable val tikTokUserData = new TikTokUserWebParser(nickname).getTikTokUserData();
 
-        log.debug("TikTokUserData: {}", (System.currentTimeMillis() - start));
+        log.debug("[{}] TikTokUserData: {}", nickname, (System.currentTimeMillis() - start));
 
         if (tikTokUserData == null) {
             BotApplication.getTelegramBotCore().sendMessage(userId, "messages.no_user");
@@ -85,7 +88,7 @@ public final class SearchMessage {
 
         @Nullable val tiktokItemListData = new TikTokItemListWebParser(tikTokUserData.getSecUid()).getTikTokItemListData();
 
-        log.debug("TikTokItemListData: {}", (System.currentTimeMillis() - start));
+        log.debug("[{}] TikTokItemListData: {}", nickname, (System.currentTimeMillis() - start));
 
         @NonNull val builder = new StringBuilder();
 
@@ -119,12 +122,34 @@ public final class SearchMessage {
 
         builder.append("\n");
 
-        @NonNull val index = new AtomicInteger(1);
+        @NonNull val videosData = tiktokItemListData.getVideosData();
+        @NonNull val tikTokItemParsed = new ArrayList<TikTokVideoData>();
+        @NonNull val index = new AtomicInteger(0);
 
-        tiktokItemListData.getVideosData().forEach(videoData -> {
+        videosData.forEach(videoData -> tikTokItemParsed.add(null));
+        videosData.forEach(videoData -> {
+            val indexThread = index.getAndAdd(1);
+
+            @NonNull val thread = new Thread(() -> {
+                try {
+                    tikTokItemParsed.set(indexThread, new TikTokItemVideoParser(TikTokAPI.getTiktokAccountVideoUrl(nickname, videoData.getId())).getTikTokVideoData());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+
+            thread.start();
+        });
+
+        boolean fullParsed = false;
+
+        while (!fullParsed)
+            fullParsed = tikTokItemParsed.stream().noneMatch(Objects::isNull);
+
+        index.set(1);
+
+        tikTokItemParsed.forEach(tikTokVideoData -> {
             try {
-                @Nullable val tikTokVideoData = new TikTokItemVideoParser(TikTokAPI.getTiktokAccountVideoUrl(nickname, videoData.getId())).getTikTokVideoData();
-
                 if (tikTokVideoData != null)
                     builder.append(localize.localize("messages.video.number")).append(index.getAndAdd(1)).append("\n")
                             .append(localize.localize("messages.desc")).append(tikTokVideoData.getDesc()).append("\n")
@@ -137,16 +162,20 @@ public final class SearchMessage {
                             .append(localize.localize("messages.shares")).append(tikTokVideoData.getStats().getShareCount()).append("\n")
                             .append(localize.localize("messages.video.music")).append(tikTokVideoData.getMusic().getAuthorName()).append("\n\n")
                             ;
-            } catch (IOException | LanguageNotRegisteredException exception) {
+            } catch (LanguageNotRegisteredException exception) {
                 exception.printStackTrace();
             }
         });
 
-        log.debug("TikTokVideoData: {}", (System.currentTimeMillis() - start));
+        log.debug("[{}] TikTokVideoData: {}", nickname, (System.currentTimeMillis() - start));
 
         builder.append(localize.localize("messages.successful")).append(formatterExecute.format(new Date(System.currentTimeMillis() - start)));
 
-        BotApplication.getTelegramBotCore().sendMessage(userId, builder.toString());
+        BotApplication.getTelegramBotCore().sendMessage(
+                userId,
+                builder.toString()
+                        .replaceAll("_", " ")
+        );
     }
 
     @SneakyThrows
