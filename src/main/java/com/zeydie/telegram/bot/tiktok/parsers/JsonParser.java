@@ -11,10 +11,12 @@ import com.zeydie.telegram.bot.tiktok.data.v2.TikTokUserDataV2;
 import com.zeydie.telegram.bot.tiktok.data.v2.TikTokVideoDataV2;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@Log4j2
 public final class JsonParser implements IJsonParser {
     @Override
     public @Nullable TikTokUserData parseUserData(@NotNull final String json) {
@@ -31,7 +33,13 @@ public final class JsonParser implements IJsonParser {
         @Nullable var itemListDataJson = new GsonParser(json).getItemListDataJson();
 
         if (itemListDataJson != null)
-            return new SGsonBase().fromJsonToObject(itemListDataJson, new TikTokItemListDataV2());
+            try {
+                return new SGsonBase().fromJsonToObject(itemListDataJson, new TikTokItemListDataV2());
+            } catch (Exception exception) {
+                exception.printStackTrace();
+
+                log.debug(itemListDataJson);
+            }
 
         return null;
     }
