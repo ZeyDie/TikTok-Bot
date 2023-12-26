@@ -82,17 +82,17 @@ public final class SearchMessage {
             final long userId,
             @NonNull final List<String> list
     ) {
+        @NonNull val formatter = new SimpleDateFormat("HH:mm dd.MM.yyyy");
+        @NonNull val formatterExecute = new SimpleDateFormat("mm:ss");
+
+        @NonNull val localize = TelegramBotCore.getInstance().getLanguage();
+
         list.forEach(
                 nickname -> {
                     @NonNull val thread = new Thread(
                             () -> {
                                 try {
                                     val start = System.currentTimeMillis();
-
-                                    @NonNull val formatter = new SimpleDateFormat("HH:mm dd.MM.yyyy");
-                                    @NonNull val formatterExecute = new SimpleDateFormat("mm:ss");
-
-                                    @NonNull val localize = TelegramBotCore.getInstance().getLanguage();
 
                                     @Nullable val tikTokUserData = new TikTokUserWebParser(nickname).getTikTokUserData();
 

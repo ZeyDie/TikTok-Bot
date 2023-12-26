@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 public final class JsonParser implements IJsonParser {
     @Override
     public @Nullable TikTokUserData parseUserData(@NotNull final String json) {
-        @Nullable var userDataJson = new GsonParser(json).getUserDataJson();
+        @Nullable val userDataJson = new GsonParser(json).getUserDataJson();
 
         if (userDataJson != null)
             return new SGsonBase().fromJsonToObject(userDataJson, new TikTokUserDataV2());
@@ -30,7 +30,7 @@ public final class JsonParser implements IJsonParser {
 
     @Override
     public @Nullable TikTokItemListData parseItemListData(@NotNull final String json) {
-        @Nullable var itemListDataJson = new GsonParser(json).getItemListDataJson();
+        @Nullable val itemListDataJson = new GsonParser(json).getItemListDataJson();
 
         if (itemListDataJson != null)
             try {
@@ -46,7 +46,7 @@ public final class JsonParser implements IJsonParser {
 
     @Override
     public @Nullable TikTokVideoData parseVideoData(@NotNull String json) {
-        @Nullable var videosDataJson = new GsonParser(json).getVideoDataJson();
+        @Nullable val videosDataJson = new GsonParser(json).getVideoDataJson();
 
         if (videosDataJson != null)
             return new SGsonBase().fromJsonToObject(videosDataJson, new TikTokVideoDataV2());
