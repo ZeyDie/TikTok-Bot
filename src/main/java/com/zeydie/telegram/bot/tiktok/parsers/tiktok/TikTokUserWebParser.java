@@ -26,11 +26,8 @@ public final class TikTokUserWebParser {
         if (elements != null) {
             @Nullable val document = webParser.getElementOfId(elements, "__UNIVERSAL_DATA_FOR_REHYDRATION__");
 
-            if (document != null) {
-                @NonNull val json = document.data();
-
-                return BotApplication.getInstance().getJsonParser().parseUserData(json);
-            }
+            if (document != null)
+                return BotApplication.getInstance().getJsonParser().parseUserData(document.data());
         }
 
         return null;

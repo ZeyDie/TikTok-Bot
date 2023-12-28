@@ -58,11 +58,13 @@ public final class SearchMessage {
     ) {
         BotApplication.getTelegramBotCore().sendMessage(userId, "messages.searching");
 
-        @NonNull val list = new ArrayList<String>();
+        @NonNull val list = new ArrayList<String>(0);
 
         Arrays.stream(url.split("\n")).toList()
                 .forEach(
                         string -> {
+                            if (list.size() >= 5) return;
+
                             string = string
                                     .replaceAll(TikTokAPI.tiktokUrl, "")
                                     .replaceAll("@", "");

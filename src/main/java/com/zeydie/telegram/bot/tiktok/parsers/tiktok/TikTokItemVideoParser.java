@@ -23,11 +23,8 @@ public final class TikTokItemVideoParser {
         if (elements != null) {
             @Nullable val document = webParser.getElementOfId(elements, "SIGI_STATE");
 
-            if (document != null) {
-                @NonNull val json = document.data();
-
-                return BotApplication.getInstance().getJsonParser().parseVideoData(json);
-            }
+            if (document != null)
+                return BotApplication.getInstance().getJsonParser().parseVideoData(document.data());
         }
 
         return null;
