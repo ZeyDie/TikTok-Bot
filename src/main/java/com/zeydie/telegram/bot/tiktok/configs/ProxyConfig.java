@@ -19,7 +19,7 @@ import java.util.List;
 
 @Data
 public final class ProxyConfig {
-    private boolean enable = false;
+    private boolean enable = true;
     private List<ProxyData> proxies;
 
     public ProxyConfig() {
@@ -30,7 +30,7 @@ public final class ProxyConfig {
                             Proxy.Type.HTTP,
                             "38.180.114.56",
                             3128,
-                            false,
+                            true,
                             "tecmint",
                             "123456789",
                             10000
@@ -97,7 +97,7 @@ public final class ProxyConfig {
 
         public boolean isAvailable() {
             try {
-                @NonNull val url = TikTokAPI.tiktokUrl + TikTokAPI.tiktokAccount;
+                @NonNull val url = TikTokAPI.tiktokUrlWWW + TikTokAPI.tiktokAccount;
                 @NonNull val webParser = new PCWebParser(url);
 
                 Jsoup.connect(url)

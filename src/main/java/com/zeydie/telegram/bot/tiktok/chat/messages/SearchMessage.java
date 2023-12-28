@@ -67,6 +67,7 @@ public final class SearchMessage {
 
                             string = string
                                     .replaceAll(TikTokAPI.tiktokUrl, "")
+                                    .replaceAll(TikTokAPI.tiktokUrlWWW, "")
                                     .replaceAll("@", "");
 
                             if (string.contains("?"))
