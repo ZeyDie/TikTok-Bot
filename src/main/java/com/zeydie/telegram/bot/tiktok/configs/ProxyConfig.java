@@ -27,6 +27,7 @@ public final class ProxyConfig {
             this.proxies = new ArrayList<>();
             this.proxies.add(
                     new ProxyData(
+                            true,
                             Proxy.Type.HTTP,
                             "38.180.114.56",
                             3128,
@@ -55,13 +56,14 @@ public final class ProxyConfig {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class ProxyData {
+        private boolean enable;
         private Proxy.Type type;
         private String ip;
         private int port;
         private boolean auth;
         private String user;
         private String password;
-        private int timeout = Duration.of(1, ChronoUnit.MINUTES).toMillisPart();
+        private int timeout = Duration.of(10, ChronoUnit.SECONDS).toMillisPart();
 
         public @NotNull Proxy getProxy() {
             switch (this.type) {
@@ -96,13 +98,15 @@ public final class ProxyConfig {
         }
 
         public boolean isAvailable() {
+            if (!this.enable) return false;
+
             try {
                 @NonNull val url = TikTokAPI.tiktokUrlWWW + TikTokAPI.tiktokAccount;
                 @NonNull val webParser = new PCWebParser(url);
 
                 Jsoup.connect(url)
                         .userAgent(webParser.getUserAgent())
-                        .proxy(ConfigStore.getProxyConfig().getProxyAvailable())
+                        .proxy(this.getProxy())
                         .ignoreHttpErrors(true)
                         .ignoreContentType(true)
                         .get();
