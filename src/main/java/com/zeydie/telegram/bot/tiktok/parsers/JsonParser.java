@@ -6,6 +6,7 @@ import com.zeydie.telegram.bot.tiktok.api.data.TikTokItemListData;
 import com.zeydie.telegram.bot.tiktok.api.data.TikTokUserData;
 import com.zeydie.telegram.bot.tiktok.api.data.TikTokVideoData;
 import com.zeydie.telegram.bot.tiktok.api.parsers.IJsonParser;
+import com.zeydie.telegram.bot.tiktok.configs.ConfigStore;
 import com.zeydie.telegram.bot.tiktok.data.v2.TikTokItemListDataV2;
 import com.zeydie.telegram.bot.tiktok.data.v2.TikTokUserDataV2;
 import com.zeydie.telegram.bot.tiktok.data.v2.TikTokVideoDataV2;
@@ -20,6 +21,9 @@ import org.jetbrains.annotations.Nullable;
 public final class JsonParser implements IJsonParser {
     @Override
     public @Nullable TikTokUserData parseUserData(@NotNull final String json) {
+        if (ConfigStore.getProxyConfig().isDebug())
+            log.debug("parseUserData {}", json);
+
         @Nullable val userDataJson = new GsonParser(json).getUserDataJson();
 
         if (userDataJson != null)
@@ -30,6 +34,9 @@ public final class JsonParser implements IJsonParser {
 
     @Override
     public @Nullable TikTokItemListData parseItemListData(@NotNull final String json) {
+        if (ConfigStore.getProxyConfig().isDebug())
+            log.debug("parseItemListData {}", json);
+
         @Nullable val itemListDataJson = new GsonParser(json).getItemListDataJson();
 
         if (itemListDataJson != null)
@@ -37,8 +44,6 @@ public final class JsonParser implements IJsonParser {
                 return new SGsonBase().fromJsonToObject(itemListDataJson, new TikTokItemListDataV2());
             } catch (Exception exception) {
                 exception.printStackTrace();
-
-                log.debug(itemListDataJson);
             }
 
         return null;
@@ -46,6 +51,9 @@ public final class JsonParser implements IJsonParser {
 
     @Override
     public @Nullable TikTokVideoData parseVideoData(@NotNull String json) {
+        if (ConfigStore.getProxyConfig().isDebug())
+            log.debug("parseVideoData {}", json);
+
         @Nullable val videosDataJson = new GsonParser(json).getVideoDataJson();
 
         if (videosDataJson != null)

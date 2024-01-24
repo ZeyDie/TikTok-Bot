@@ -16,9 +16,11 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Data
 public final class ProxyConfig {
+    private boolean debug;
     private boolean enable = true;
     private List<ProxyData> proxies;
 
@@ -44,11 +46,13 @@ public final class ProxyConfig {
         if (!this.enable)
             return Proxy.NO_PROXY;
 
-        return this.proxies.stream()
+        @NonNull val proxyList = this.proxies.stream()
                 .filter(ProxyData::isAvailable)
-                .findFirst()
-                .map(ProxyData::getProxy)
-                .orElse(Proxy.NO_PROXY);
+                .toList();
+
+        if (proxyList.isEmpty()) return Proxy.NO_PROXY;
+
+        return proxyList.get(new Random().nextInt(proxyList.size())).getProxy();
     }
 
     @Log4j2

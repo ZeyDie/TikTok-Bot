@@ -3,7 +3,7 @@ package com.zeydie.telegram.bot.tiktok.api;
 import org.jetbrains.annotations.NotNull;
 
 public final class TikTokAPI {
-    public static final @NotNull String tiktokUrl = "https://www.tiktok.com/";
+    public static final @NotNull String tiktokUrl = "https://tiktok.com/";
     public static final @NotNull String tiktokUrlWWW = "https://www.tiktok.com/";
     public static final @NotNull String tiktokAccount = "@tiktok";
 

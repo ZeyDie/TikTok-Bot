@@ -13,6 +13,8 @@ import java.io.IOException;
 public interface IWebParser {
     @NotNull String getUserAgent();
 
+    @NotNull IWebParser enableProxy();
+
     @NotNull IWebParser connection();
 
     @Nullable Connection getConnection();

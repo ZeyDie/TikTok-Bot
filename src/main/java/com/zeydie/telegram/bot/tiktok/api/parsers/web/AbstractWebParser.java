@@ -13,19 +13,28 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.net.Proxy;
 
 @Log4j2
 @RequiredArgsConstructor
 public abstract class AbstractWebParser implements IWebParser {
     private final String url;
+    private boolean enableProxy;
     private @Nullable Connection connection;
     private @Nullable Document document;
+
+    @Override
+    public @NotNull IWebParser enableProxy() {
+        this.enableProxy = true;
+
+        return this;
+    }
 
     @Override
     public @NotNull IWebParser connection() {
         this.connection = Jsoup.connect(this.url)
                 .userAgent(this.getUserAgent())
-                .proxy(ConfigStore.getProxyConfig().getProxyAvailable())
+                .proxy(this.enableProxy ? ConfigStore.getProxyConfig().getProxyAvailable() : Proxy.NO_PROXY)
                 .ignoreHttpErrors(true)
                 .ignoreContentType(true);
 
